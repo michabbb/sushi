@@ -1,3 +1,55 @@
+# Fork
+
+i don´t understand how this can work for someone with the original code.  
+with this change i can crate a model from any mysql-query.
+
+```php
+$QueryResult = new QueryResultModel();
+// $connection_name from config/database.php
+$QueryResult->initbootSushi($connection_name, $sql_query_string);
+```
+
+```php
+<?php
+
+namespace App\Models;
+
+use DB;
+use Illuminate\Database\Eloquent\Model;
+use Sushi\Sushi;
+
+class QueryResult extends Model
+{
+    use Sushi;
+
+    private ?string $use_connection = NULL;
+    private ?string $use_query = NULL;
+
+    public function getRows(): array
+    {
+        $result = DB::connection($this->use_connection)->select($this->use_query);
+        return array_map(fn($x) => (array)$x, $result);
+    }
+
+    /**
+     * @param mixed $use_query
+     */
+    public function setUseQuery(string $use_query): void
+    {
+        $this->use_query = $use_query;
+    }
+
+    /**
+     * @param mixed $use_connection
+     */
+    public function setUseConnection(string $use_connection): void
+    {
+        $this->use_connection = $use_connection;
+    }
+
+}
+```
+
 # Sushi 🍣
 Eloquent's missing "array" driver.
 
