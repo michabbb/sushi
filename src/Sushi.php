@@ -36,9 +36,11 @@ trait Sushi
         return static::$sushiConnection;
     }
 
-    public static function bootSushi()
+    public static function initbootSushi($connection, $query)
     {
         $instance = (new static);
+        $instance->setUseConnection($connection);
+        $instance->setUseQuery($query);
 
         $cacheFileName = config('sushi.cache-prefix', 'sushi').'-'.Str::kebab(str_replace('\\', '', static::class)).'.sqlite';
         $cacheDirectory = realpath(config('sushi.cache-path', storage_path('framework/cache')));
